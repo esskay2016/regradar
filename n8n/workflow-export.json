@@ -1,0 +1,440 @@
+{
+  "name": "RegRadar - Daily Feed",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        },
+        "feedUrl": "https://www.consumerfinance.gov/activity-log/feed/"
+      },
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -48
+      ],
+      "id": "60b93445-a20b-4b54-9ac8-91ca22cb9495",
+      "name": "RSS Feed Trigger (CFPB)"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        },
+        "feedUrl": "https://www.federalreserve.gov/feeds/press_all.xml"
+      },
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        112
+      ],
+      "id": "5cefe556-49f7-41bf-9230-7f9a22a1e1f5",
+      "name": "RSS Feed Trigger (Federal Reserve)"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        },
+        "feedUrl": "https://www.nacha.org/rss.xml"
+      },
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        304
+      ],
+      "id": "a620dbdc-b34b-42c4-bd22-9a2bf887cf45",
+      "name": "RSS Feed Trigger (NACHA)"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        496
+      ],
+      "id": "b6aef729-bafc-43df-a2f0-4704e8276a23",
+      "name": "RSS Feed Trigger (PCISSC)"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -208
+      ],
+      "id": "6f64b08b-cf8e-48ba-a311-f2885beb758b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        112,
+        32
+      ],
+      "id": "a481aa6c-c550-4c0b-8afd-4d31eeb94cfb",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ffadc2aa-6578-48f0-8f9b-72ea820ae050",
+              "leftValue": "title",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "3fa9ab07-b7fa-47b1-b5f2-03634a80513d",
+              "leftValue": "contentSnippet",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        272,
+        80
+      ],
+      "id": "f23ddebe-6f3b-4438-9bb9-7ecf23f98af8",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-6"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a regulatory intelligence analyst for a fintech company.\n\nAnalyze the following regulatory update and return a structured response:\n\nTitle: {{ $json.title }}\nContent: {{ $json.contentSnippet }}\nSource URL: {{ $json.link }}\nPublished Date: {{ $json.pubDate }}\n\nReturn your analysis in this exact format:\n\nSUMMARY: [3-5 plain English sentences summarizing the regulatory update for busy executives]\nPRODUCT_AREAS: [comma separated: Payments, Deposits, Lending, Card Issuance, Digital Onboarding, AML/BSA, Consumer Protection, Data Privacy, Other]\nURGENCY: [Action Required, Monitor Closely, or Informational]\nSO_WHAT: [2 sentences explaining what the product team should do in response to this update]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        416,
+        80
+      ],
+      "id": "965e3503-928b-4df3-aefc-828633b4abf6",
+      "name": "Message a model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "3q5Ba2pGJKba27Tm",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appb9LMLNmPjBnttF",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblHxmb2a1igBrVCi",
+          "mode": "list",
+          "cachedResultName": "Regulatory Updates",
+          "cachedResultUrl": "https://airtable.com/appb9LMLNmPjBnttF/tblHxmb2a1igBrVCi"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $('Merge').item.json.title }}",
+            "Source": "={{ $('Merge').item.json.link.includes('consumerfinance.gov') ? 'CFPB' : $('Merge').item.json.link.includes('federalreserve.gov') ? 'Federal Reserve' : $('Merge').item.json.link.includes('nacha.org') ? 'NACHA' : 'PCISSC' }}",
+            "Published Date": "={{ new Date($('Merge').item.json.pubDate).toISOString().split('T')[0] }}",
+            "Summary": "={{ $('Message a model').item.json.content[0].text.split('SUMMARY:')[1].split('PRODUCT_AREAS:')[0].trim() }}",
+            "Product Areas": "={{ $('Message a model').item.json.content[0].text.split('PRODUCT_AREAS:')[1].split('URGENCY:')[0].trim() }}",
+            "Urgency": "={{ ['enforcement action', 'civil penalty', 'final rule', 'consent order', 'cease and desist', 'mandatory compliance', 'violation', 'supervisory action', 'corrective action', 'udaap', 'deceptive marketing', 'unfair practices', 'abusive acts', 'examination findings', 'deficiencies', 'unsafe or unsound', 'compliance failures', 'enforcement proceeding'].some(keyword => $('Message a model').item.json.content[0].text.toLowerCase().includes(keyword)) ? 'Action Required' : $('Message a model').item.json.content[0].text.split('URGENCY:')[1].split('SO_WHAT:')[0].trim() }}",
+            "So What": "={{ $('Message a model').item.json.content[0].text.split('SO_WHAT:')[1].trim() }}",
+            "Source URL": "={{ $('Merge').item.json.link }}",
+            "Raw Content": "={{ $('Merge').item.json.contentSnippet }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Published Date",
+              "displayName": "Published Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Product Areas",
+              "displayName": "Product Areas",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Urgency",
+              "displayName": "Urgency",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "So What",
+              "displayName": "So What",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Source URL",
+              "displayName": "Source URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Raw Content",
+              "displayName": "Raw Content",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        448
+      ],
+      "id": "81553e6a-7e1a-452b-a44a-c1b4136da7d9",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "uKA9LYeE2oZn5tAD",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed Trigger (CFPB)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "RSS Feed Trigger (Federal Reserve)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "RSS Feed Trigger (NACHA)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "RSS Feed Trigger (PCISSC)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9f710ca5-d1c1-400a-9a38-a049c9bf8a02",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16079e2383c62dfa12f940e0229cbff11d925e0ce0372f051c28c54c8fdff8f9"
+  },
+  "id": "0GJJx8FBxePWwZJl",
+  "tags": []
+}
