@@ -95,7 +95,7 @@ Regulatory updates are tagged across: Payments, Deposits, Lending, Card Issuance
 
 ## Live Demo
 
-**[View RegRadar Dashboard](https://vm-regradar-dashboard.vusercontent.net)**
+**[View RegRadar Dashboard](https://v0-regradar-dashboard.vercel.app/)**
 
 The dashboard displays real regulatory updates from federal sources (CFPB, Federal Reserve, NACHA, PCISSC), analyzed with Claude AI for urgency and product impact, and synced from Airtable in real-time.
 
