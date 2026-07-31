@@ -46,6 +46,7 @@ v0 Dashboard (interactive UI)
 See [docs/SETUP.md](docs/SETUP.md) for detailed step-by-step setup.
 
 ## Project Structure
+```
 regradar/
 ├── README.md (this file)
 ├── n8n/
@@ -59,6 +60,7 @@ regradar/
 └── docs/
     ├── ARCHITECTURE.md (system design)
     └── SETUP.md (installation guide)
+```
 
 >Prompt engineering and classification logic documentation available on request for serious prospects and partners.
 
