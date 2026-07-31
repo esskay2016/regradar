@@ -6,6 +6,8 @@ Real-time federal regulatory monitoring powered by Agentic AI.
 
 RegRadar automatically monitors 4 federal regulatory sources daily, analyzes updates with Claude AI, and surfaces priority items through an interactive dashboard. Built with n8n, Claude, Airtable, and v0.dev.
 
+> **Note:** This repository is shared for demonstration purposes. The architecture and approach are documented in full below; production prompt tuning and deployment configuration are available on request.
+
 ## Features
 
 - **Daily Automated Monitoring** - Tracks 4 federal regulators (CFPB, Federal Reserve, NACHA, PCISSC)
@@ -50,7 +52,6 @@ regradar/
 │   ├── workflow-export.json     (n8n workflow)
 │   └── WORKFLOW_SETUP.md        (how to import)
 ├── claude/
-│   └── system-prompt.md         (AI analysis prompt)
 ├── airtable/
 │   └── SCHEMA.md                (database structure)
 ├── dashboard/
@@ -58,7 +59,9 @@ regradar/
 └── docs/
 ├── ARCHITECTURE.md          (system design)
 ├── SETUP.md                 (installation guide)
-└── KEYWORD_LOGIC.md         (urgency override logic)
+
+
+>Prompt engineering and classification logic documentation available on request for serious prospects and partners.
 
 ## Regulatory Sources
 
